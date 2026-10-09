@@ -146,7 +146,7 @@ def run_sherlock(job_id: str, username: str, scan_mode: str = "fast") -> None:
         with tempfile.TemporaryDirectory(prefix="sherlock-web-") as tmp:
             output_path = Path(tmp) / "results.txt"
             timeout = SHERLOCK_FAST_TIMEOUT if scan_mode == "fast" else SHERLOCK_FULL_TIMEOUT
-            cmd = [sys.executable, "-m", "sherlock_project", username, "--print-found", "--no-color", "--txt", "--output", str(output_path), "--timeout", str(timeout)]
+            cmd = [sys.executable, "-m", "sherlock_project", username, "--print-found", "--no-color", "--output", str(output_path), "--timeout", str(timeout)]
             if scan_mode == "fast":
                 for site in FAST_SITES:
                     cmd.extend(["--site", site])
