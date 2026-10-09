@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Free, no-login username and email OSINT web app.">
+  <title>Sherlock Web - OSINT</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="noise"></div>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Sherlock Web home"><span class="brand-mark">S</span><span>Sherlock<span class="muted">.web</span></span></a>
+    <div class="pill">FREE - NO LOGIN</div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow"><span class="dot"></span> OPEN-SOURCE INTELLIGENCE</div>
+      <h1>Investigate a username<br><span>or an email.</span></h1>
+      <p class="hero-copy">Run public OSINT checks without an account. Username scans and email scans stay separate so each result set is easy to understand.</p>
+
+      <div class="mode-tabs" role="tablist" aria-label="OSINT mode">
+        <button class="mode-tab active" data-mode="username" role="tab" aria-selected="true">Username</button>
+        <button class="mode-tab" data-mode="email" role="tab" aria-selected="false">Email</button>
+      </div>
+
+      <form id="usernameForm" class="search-card" data-mode-panel="username">
+        <label for="username">USERNAME</label>
+        <div class="input-row"><span class="prefix">@</span><input id="username" name="username" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="64" placeholder="username" required><button id="usernameBtn" type="submit"><span>Search</span><span class="arrow">Open</span></button></div>
+        <div class="scan-modes" aria-label="Username scan speed"><button type="button" class="scan-mode active" data-scan-mode="fast">Fast scan</button><button type="button" class="scan-mode" data-scan-mode="full">Full scan</button></div>
+        <div class="hint">Fast scan checks high-value platforms first. Full scan checks the complete Sherlock dataset.</div>
+      </form>
+
+      <form id="emailForm" class="search-card hidden" data-mode-panel="email">
+        <label for="email">EMAIL ADDRESS</label>
+        <div class="input-row"><span class="prefix">@</span><input id="email" name="email" type="email" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="254" placeholder="name@example.com" required><button id="emailBtn" type="submit"><span>Scan</span><span class="arrow">Open</span></button></div>
+        <div class="hint">Passive DNS + email OSINT. No account login or password checks.</div>
+      </form>
+
+      <div id="errorBox" class="alert error hidden" role="alert"></div>
+
+      <section id="usernameResults" class="results hidden">
+        <div class="results-head"><div><div class="section-kicker">USERNAME OSINT</div><h2 id="usernameResultTitle">Results</h2></div><div id="usernameResultCount" class="count">0 FOUND</div></div>
+        <div id="usernameProgress" class="progress-card"><div class="spinner"></div><div><strong>Running Sherlock</strong><span id="usernameProgressText">Checking supported sites.</span></div></div>
+        <div id="usernameGrid" class="result-grid"></div>
+        <div id="usernameEmpty" class="empty hidden">No matching accounts were returned by Sherlock for this username.</div>
+        <div id="usernameLog" class="log-box hidden"></div>
+      </section>
+
+      <section id="emailResults" class="results hidden">
+        <div class="results-head"><div><div class="section-kicker">EMAIL OSINT</div><h2 id="emailResultTitle">Email</h2></div><div id="emailResultCount" class="count">SCANNING</div></div>
+        <div id="emailProgress" class="progress-card"><div class="spinner"></div><div><strong id="emailProgressTitle">Starting email scan</strong><span id="emailProgressText">Checking DNS and passive OSINT sources.</span></div></div>
+        <div id="emailSummary" class="email-summary hidden"></div>
+        <div id="emailFindings" class="email-findings"></div>
+        <div id="emailSourcesError" class="source-warning hidden"></div>
+      </section>
+
+      <section class="donate-card" id="support">
+        <div><div class="section-kicker">KEEP IT FREE</div><h2>Support the project</h2><p>Running OSINT scans costs server resources. Donations help keep Sherlock Web free and ad-light.</p></div>
+        {% if donate_url %}<a class="donate-btn" href="{{ donate_url }}" target="_blank" rel="noopener noreferrer">Donate</a>{% else %}<span class="setup-badge">Set DONATE_URL</span>{% endif %}
+      </section>
+      <section class="notice"><strong>Use responsibly.</strong><span>This app surfaces public OSINT signals. Results can be incomplete or inaccurate; respect applicable laws and each site's terms.</span></section>
+    </section>
+  </main>
+  <footer><span>Built as a web interface for <a href="https://github.com/sherlock-project/sherlock" target="_blank" rel="noopener noreferrer">Sherlock Project</a>.</span><span>No accounts. No scan history database.</span></footer>
+  <script>window.DONATE_URL = {{ donate_url|tojson }};</script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
